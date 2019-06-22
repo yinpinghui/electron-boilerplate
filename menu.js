@@ -1,6 +1,6 @@
 'use strict';
 const path = require('path');
-const {app, Menu, shell} = require('electron');
+const { app, Menu, shell} = require('electron');
 const {
 	is,
 	appMenu,
@@ -28,12 +28,12 @@ const helpSubmenu = [
 		label: 'Report an Issue…',
 		click() {
 			const body = `
-<!-- Please succinctly describe your issue and steps to reproduce it. -->
+				<!-- Please succinctly describe your issue and steps to reproduce it. -->
 
 
----
+				---
 
-${debugInfo()}`;
+				${debugInfo()}`;
 
 			openNewGitHubIssue({
 				user: 'sindresorhus',
@@ -50,13 +50,21 @@ if (!is.macos) {
 			type: 'separator'
 		},
 		aboutMenuItem({
+			title : '关于我们',
+			text : '啦啦啦',
 			icon: path.join(__dirname, 'static', 'icon.png'),
-			text: 'Created by Your Name'
+			text: '空中研发团队'
 		})
 	);
 }
 
 const debugSubmenu = [
+	{
+		label: '打印测试',
+		click() {
+			app.print("printtest")
+		}
+	},
 	{
 		label: 'Show Settings',
 		click() {
@@ -151,6 +159,7 @@ const otherTemplate = [
 				type: 'separator'
 			},
 			{
+				label :'退出', 
 				role: 'quit'
 			}
 		]
@@ -169,9 +178,10 @@ const otherTemplate = [
 
 const template = process.platform === 'darwin' ? macosTemplate : otherTemplate;
 
+
 if (is.development) {
 	template.push({
-		label: 'Debug',
+		label: '调试',
 		submenu: debugSubmenu
 	});
 }

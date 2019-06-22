@@ -1,20 +1,20 @@
 'use strict';
 const path = require('path');
-const {app, BrowserWindow, Menu} = require('electron');
+const {app, BrowserWindow, Menu, ipcMain} = require('electron');
 /// const {autoUpdater} = require('electron-updater');
 const {is} = require('electron-util');
 const unhandled = require('electron-unhandled');
 const debug = require('electron-debug');
 const contextMenu = require('electron-context-menu');
 const config = require('./config');
-const menu = require('./menu');
+
 
 unhandled();
 debug();
 contextMenu();
 
 // Note: Must match `build.appId` in package.json
-app.setAppUserModelId('com.company.AppName');
+app.setAppUserModelId('com.kongzhong.cashier');
 
 // Uncomment this before publishing your first version.
 // It's commented out as it throws an error if there are no published versions.
@@ -48,10 +48,14 @@ const createMainWindow = async () => {
 		mainWindow = undefined;
 	});
 
-	await win.loadFile(path.join(__dirname, 'index.html'));
+	//await win.loadFile(path.join(__dirname, 'index.html'));
+	win.loadURL('https://vrpos.kongzhong.com/');
 
 	return win;
 };
+
+
+const menu = require('./menu');
 
 // Prevent multiple instances of the app
 if (!app.requestSingleInstanceLock()) {
@@ -85,6 +89,31 @@ app.on('activate', () => {
 	Menu.setApplicationMenu(menu);
 	mainWindow = await createMainWindow();
 
-	const favoriteAnimal = config.get('favoriteAnimal');
-	mainWindow.webContents.executeJavaScript(`document.querySelector('header p').textContent = 'Your favorite animal is ${favoriteAnimal}'`);
+	//const favoriteAnimal = config.get('favoriteAnimal');
+	//mainWindow.webContents.executeJavaScript(`document.querySelector('header p').textContent = 'Your favorite animal is ${favoriteAnimal}'`);
 })();
+
+//----------------------------
+const escpos = require('./escpos');
+const device  = new escpos.USB(0x6868,0x0200);
+const options = { encoding: "GB18030" /* default */ }
+const printer = new escpos.Printer(device, options);
+
+let print = (data)=>{
+	console.log("go print test")
+	device.open(function(){
+		printer
+		.font('a')
+		.align('ct')
+		.style('bu')
+		.size(1, 1)
+		.text('The quick brown fox jumps over the lazy dog')
+		.text('敏捷的棕色狐狸跳过懒狗')
+		.barcode('1234567', 'EAN8')
+		.qrimage('https://github.com/song940/node-escpos', function(err){
+		  this.cut();
+		  this.close();
+		});
+	});
+}
+ipcMain.on('printtest', print )
