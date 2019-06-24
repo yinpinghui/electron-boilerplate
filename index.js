@@ -35,7 +35,13 @@ const createMainWindow = async () => {
 		title: app.getName(),
 		show: false,
 		width: 600,
-		height: 400
+		height: 400,
+		webPreferences: {
+			plugins: true,
+			webSecurity:true,
+			allowDisplayingInsecureContent:true,
+			allowRunningInsecureContent:true,
+		}
 	});
 
 	win.on('ready-to-show', () => {
@@ -48,8 +54,8 @@ const createMainWindow = async () => {
 		mainWindow = undefined;
 	});
 
-	//await win.loadFile(path.join(__dirname, 'index.html'));
-	win.loadURL('https://vrpos.kongzhong.com/');
+	await win.loadFile(path.join(__dirname, 'index.html'));
+	// win.loadURL('http://localhost:8080/');
 
 	return win;
 };
@@ -99,21 +105,11 @@ const device  = new escpos.USB(0x6868,0x0200);
 const options = { encoding: "GB18030" /* default */ }
 const printer = new escpos.Printer(device, options);
 
-let print = (data)=>{
-	console.log("go print test")
+let print = (evt,data)=>{
+	console.log("main process,evt",evt)
+	console.log("main process,data",data)
 	device.open(function(){
-		printer
-		.font('a')
-		.align('ct')
-		.style('bu')
-		.size(1, 1)
-		.text('The quick brown fox jumps over the lazy dog')
-		.text('敏捷的棕色狐狸跳过懒狗')
-		.barcode('1234567', 'EAN8')
-		.qrimage('https://github.com/song940/node-escpos', function(err){
-		  this.cut();
-		  this.close();
-		});
+		eval(data.value)
 	});
 }
 ipcMain.on('printtest', print )
