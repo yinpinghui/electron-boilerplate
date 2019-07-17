@@ -8,9 +8,9 @@ injectJS = {
     });
     
     
-    window.sendToElectron= function (data) {
-        console.log(data)
-        ipcRenderer.sendToHost("default_channel",data);
+    window.sendToElectron= function (data) {      
+      console.log(encodeURIComponent(JSON.stringify(data)))  
+      ipcRenderer.sendToHost("default_channel",encodeURIComponent(JSON.stringify(data)));
     }
   }
 }

@@ -101,15 +101,39 @@ app.on('activate', () => {
 
 //----------------------------
 const escpos = require('./escpos');
-const device  = new escpos.USB(0x6868,0x0200);
-const options = { encoding: "GB18030" /* default */ }
-const printer = new escpos.Printer(device, options);
+let printer = null
+let device = null
+try{
+	device  = new escpos.USB(0x6868,0x0200);
+	const options = { encoding: "GB18030" /* default */ }
+	printer = new escpos.Printer(device, options);
+}catch(e){
+	window.alert("小票机没有连接")
+}
 
 let print = (evt,data)=>{
-	console.log("main process,evt",evt)
-	console.log("main process,data",data)
+	let _data = decodeURIComponent(data)
+
+	_data = _data.substring(0, _data.length-1)
+	let value2 = `
+		(function(p1, that){			
+			p1${_data}, function(err){
+				p1.cut();
+				p1.close();	
+			})
+		})
+	`
+	console.log(value2)	
 	device.open(function(){
-		eval(data.value)
+		
+		try{
+			let fn = eval(value2)
+			console.log(fn)
+			fn(printer,this)
+		}catch(e){
+			console.log(e)
+		}
+		
 	});
 }
 ipcMain.on('printtest', print )

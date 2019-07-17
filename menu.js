@@ -17,31 +17,14 @@ const showPreferences = () => {
 
 const helpSubmenu = [
 	openUrlMenuItem({
-		label: 'Website',
-		url: 'https://github.com/sindresorhus/electron-boilerplate'
+		label: '官网',
+		url: 'https://www.kongzhong.com'
 	}),
 	openUrlMenuItem({
-		label: 'Source Code',
-		url: 'https://github.com/sindresorhus/electron-boilerplate'
-	}),
-	{
-		label: 'Report an Issue…',
-		click() {
-			const body = `
-				<!-- Please succinctly describe your issue and steps to reproduce it. -->
-
-
-				---
-
-				${debugInfo()}`;
-
-			openNewGitHubIssue({
-				user: 'sindresorhus',
-				repo: 'electron-boilerplate',
-				body
-			});
-		}
-	}
+		label: '联系我们',
+		url: 'https://www.kongzhong.com'
+	})
+	
 ];
 
 if (!is.macos) {

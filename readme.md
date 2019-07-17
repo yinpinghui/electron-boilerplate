@@ -40,6 +40,13 @@ There's also a [Yeoman generator](https://github.com/sindresorhus/generator-elec
 ---
 
 
+
+
+---
+
+
+"dist": "electron-builder --macos --linux --windows",
+
 # App Name
 
 > The best app ever

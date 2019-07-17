@@ -2,13 +2,13 @@ const { ipcRenderer } = require('electron')
 let webview = document.getElementById("cashier");
 webview.addEventListener("dom-ready", function(){
     webview.executeJavaScript('injectJS.domreadyFunction()');
-    webview.openDevTools()
+    //webview.openDevTools()
 })
 webview.addEventListener('ipc-message', (e)=>{
-    console.log(e)
-    console.log(e.args[0])
-    let {evt,value} = e.args[0];
-    ipcRenderer.send(evt,value)
+    
+    //console.log(e.args[0])
+    let {evt,value} = JSON.parse(decodeURIComponent(e.args[0]));
+    ipcRenderer.send(evt, value)
 });
 
 // webview.addEventListener('crashed', ()=>{
