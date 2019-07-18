@@ -1,6 +1,6 @@
 'use strict';
 const path = require('path');
-const {app, BrowserWindow, Menu, ipcMain} = require('electron');
+const {app, BrowserWindow, Menu, ipcMain,dialog } = require('electron');
 /// const {autoUpdater} = require('electron-updater');
 const {is} = require('electron-util');
 const unhandled = require('electron-unhandled');
@@ -108,7 +108,7 @@ try{
 	const options = { encoding: "GB18030" /* default */ }
 	printer = new escpos.Printer(device, options);
 }catch(e){
-	window.alert("小票机没有连接")
+	dialog.showErrorBox("提示", "小票机没有连接")
 }
 
 let print = (evt,data)=>{
